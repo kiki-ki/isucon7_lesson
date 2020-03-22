@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -81,9 +82,11 @@ func jsonifyMessages(m []Message) []map[string]interface{} {
 	for i := len(m) - 1; i >= 0; i-- {
 		uIds = append(uIds, strconv.Itoa(int(m[i].UserID)))
 	}
+	log.Printf("DEBUG:uIDs:%v", uIds)
 
 	db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id = IN(?)", strings.Join(uIds, ","))
 
+	log.Printf("DEBUG:u:%v", u)
 	response := make([]map[string]interface{}, 0)
 
 	for i := len(m) - 1; i >= 0; i-- {
@@ -94,6 +97,7 @@ func jsonifyMessages(m []Message) []map[string]interface{} {
 		r["content"] = m[i].Content
 		response = append(response, r)
 	}
+	log.Printf("DEBUG:res:%v", response)
 	return response
 }
 
