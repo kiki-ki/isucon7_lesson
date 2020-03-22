@@ -59,7 +59,7 @@ func init() {
 	if db_user == "" {
 		db_user = "isucon"
 	}
-	db_password := os.Getenv("ISUBATA_DB_PASSWORD")
+	db_password := os.Getenv("")
 	if db_password != "" {
 		db_password = ":" + db_password
 	}
