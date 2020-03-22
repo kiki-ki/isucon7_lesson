@@ -85,9 +85,13 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	}
 	log.Printf("DEBUG:uIDs:%v", strings.Join(uIds, ","))
 
-	db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
+	err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
-	log.Printf("DEBUG:u:%v", u)
+	if err != nil {
+		return User{}, error.New("user not found")
+	}
+
+	log.Printf("DEBUG:users:%v", u)
 	response := make([]map[string]interface{}, 0)
 
 	for i := len(m) - 1; i >= 0; i-- {
@@ -103,7 +107,6 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 		r["content"] = m[i].Content
 		response = append(response, r)
 	}
-	log.Printf("DEBUG:res:%v", response)
 	return response, nil
 }
 
