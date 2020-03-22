@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -76,7 +77,7 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 	return r, nil
 }
 
-func jsonifyMessages(m []Message) []map[string]interface{} {
+func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	u := []User{}
 	var uIds []string = make([]string, 0)
 	for i := len(m) - 1; i >= 0; i-- {
@@ -89,27 +90,31 @@ func jsonifyMessages(m []Message) []map[string]interface{} {
 	log.Printf("DEBUG:u:%v", u)
 	response := make([]map[string]interface{}, 0)
 
-	log.Printf("DEBUG:u:%v", u)
 	for i := len(m) - 1; i >= 0; i-- {
+		user, err := findUserFromArray(u, uIds[i])
+		log.Printf("DEBUG:user:%v", user)
+		if err != nil {
+			return nil, err
+		}
 		var r map[string]interface{}
 		r["id"] = m[i].ID
-		r["user"] = findUserFromArray(u, uIds[i])
+		r["user"] = user
 		r["date"] = m[i].CreatedAt.Format("2006/01/02 15:04:05")
 		r["content"] = m[i].Content
 		response = append(response, r)
 	}
 	log.Printf("DEBUG:res:%v", response)
-	return response
+	return response, nil
 }
 
-func findUserFromArray(users []User, uID string) User {
+func findUserFromArray(users []User, uID string) (User, error) {
 	uIDInt, _ := strconv.ParseInt(uID, 10, 64)
 	for _, v := range users {
 		if v.ID == uIDInt {
-			return v
+			return v, nil
 		}
 	}
-	return User{}
+	return User{}, errors.New("user not found")
 }
 
 func getMessage(c echo.Context) error {
@@ -132,7 +137,10 @@ func getMessage(c echo.Context) error {
 		return err
 	}
 
-	response := jsonifyMessages(messages)
+	response, err := jsonifyMessages(messages)
+	if err != nil {
+		return err
+	}
 	// response := make([]map[string]interface{}, 0)
 	// for i := len(messages) - 1; i >= 0; i-- {
 	// 	m := messages[i]
