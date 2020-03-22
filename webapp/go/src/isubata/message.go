@@ -82,13 +82,14 @@ func jsonifyMessages(m []Message) []map[string]interface{} {
 	for i := len(m) - 1; i >= 0; i-- {
 		uIds = append(uIds, strconv.Itoa(int(m[i].UserID)))
 	}
-	log.Printf("DEBUG:uIDs:%v", uIds)
+	log.Printf("DEBUG:uIDs:%v", strings.Join(uIds, ","))
 
-	db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id = IN(?)", strings.Join(uIds, ","))
+	db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	log.Printf("DEBUG:u:%v", u)
 	response := make([]map[string]interface{}, 0)
 
+	log.Printf("DEBUG:u:%v", u)
 	for i := len(m) - 1; i >= 0; i-- {
 		var r map[string]interface{}
 		r["id"] = m[i].ID
