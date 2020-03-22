@@ -138,7 +138,7 @@ func getMessage(c echo.Context) error {
 	}
 
 	response, err := jsonifyMessages(messages)
-	log.Println(responce)
+	log.Println(response)
 	if err != nil {
 		return err
 	}
