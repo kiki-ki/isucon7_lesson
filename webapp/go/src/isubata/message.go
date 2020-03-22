@@ -88,7 +88,7 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	if err != nil {
-		return User{}, error.New("user not found")
+		return nil, errors.New("user not found")
 	}
 
 	log.Printf("DEBUG:users:%v", u)
