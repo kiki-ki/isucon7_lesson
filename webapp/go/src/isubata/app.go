@@ -577,16 +577,24 @@ func postProfile(c echo.Context) error {
 	return c.Redirect(http.StatusSeeOther, "/")
 }
 
+var imageCache = make(map[string][]byte, 0)
+
 func getIcon(c echo.Context) error {
 	var name string
 	var data []byte
-	err := db.QueryRow("SELECT name, data FROM image WHERE name = ?",
-		c.Param("file_name")).Scan(&name, &data)
-	if err == sql.ErrNoRows {
-		return echo.ErrNotFound
-	}
-	if err != nil {
-		return err
+	name = c.Param("file_name")
+	if val, ok := imageCache[name]; ok {
+		data = val
+	} else if err := db.QueryRow("SELECT data FROM image WHERE name = ?",
+		name).Scan(&data); err != nil {
+		if err == sql.ErrNoRows {
+			return echo.ErrNotFound
+		}
+		if err != nil {
+			return err
+		}
+	} else {
+		imageCache[name] = data
 	}
 
 	mime := ""
