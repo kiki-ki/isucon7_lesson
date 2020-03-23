@@ -78,6 +78,25 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 }
 
 func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
+	// users := []User{}
+	// err := db.Select(&users, "select user.id, user.name, user.display_name, user.avatar_icon from user join message on user.id = message.user_id")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// var uIds []int64 = make([]int64, 0)
+	// for i := len(m) - 1; i >= 0; i-- {
+	// 	uIds = append(uIds, m[i].UserID)
+	// }
+
+	// for _, v := range uIds {
+	// 	for _, u := range users {
+	// 		if v == u.ID {
+
+	// 		}
+	// 	}
+	// }
+
+	// IN
 	u := []User{}
 	var uIds []string = make([]string, 0)
 	for i := len(m) - 1; i >= 0; i-- {
