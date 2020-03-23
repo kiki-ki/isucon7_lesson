@@ -1,0 +1,1 @@
+ALTER TABLE image ADD INDEX name_index(name)
