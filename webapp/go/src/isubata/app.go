@@ -413,7 +413,7 @@ func getHistory(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
+	log.Println(messages)
 	mjson, err := jsonifyMessages(messages)
 	if err != nil {
 		return err
