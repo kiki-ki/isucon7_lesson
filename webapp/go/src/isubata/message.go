@@ -80,6 +80,9 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 
 func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	// IN
+	if len(m) == 0 {
+		return nil, nil
+	}
 	u := []User{}
 	var uIds []string = make([]string, 0)
 	for i := len(m) - 1; i >= 0; i-- {
@@ -93,7 +96,7 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	//err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	if err != nil {
-		return nil, errors.New("user not found")
+		return nil, err
 	}
 
 	response := make([]map[string]interface{}, 0)
