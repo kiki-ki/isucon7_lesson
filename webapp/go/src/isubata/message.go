@@ -79,34 +79,14 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 }
 
 func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
-	// users := []User{}
-	// err := db.Select(&users, "select user.id, user.name, user.display_name, user.avatar_icon from user join message on user.id = message.user_id")
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// var uIds []int64 = make([]int64, 0)
-	// for i := len(m) - 1; i >= 0; i-- {
-	// 	uIds = append(uIds, m[i].UserID)
-	// }
-
-	// for _, v := range uIds {
-	// 	for _, u := range users {
-	// 		if v == u.ID {
-
-	// 		}
-	// 	}
-	// }
-
 	// IN
 	u := []User{}
 	var uIds []string = make([]string, 0)
 	for i := len(m) - 1; i >= 0; i-- {
 		uIds = append(uIds, strconv.Itoa(int(m[i].UserID)))
 	}
-	log.Printf("DEBUG:uIDs:%v", strings.Join(uIds, ","))
 	s := "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(%v)"
 	sql := fmt.Sprintf(s, strings.Join(uIds, ","))
-	log.Println(sql)
 	err := db.Select(&u, sql)
 	//err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
@@ -114,12 +94,10 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 		return nil, errors.New("user not found")
 	}
 
-	log.Printf("DEBUG:users:%v", u)
 	response := make([]map[string]interface{}, 0)
 
 	for i := len(m) - 1; i >= 0; i-- {
 		user, err := findUserFromArray(u, m[i].UserID)
-		log.Printf("DEBUG:user:%v", user)
 		if err != nil {
 			return nil, err
 		}
