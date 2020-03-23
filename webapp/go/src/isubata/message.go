@@ -118,7 +118,7 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	response := make([]map[string]interface{}, 0)
 
 	for i := len(m) - 1; i >= 0; i-- {
-		user, err := findUserFromArray(u, uIds[i])
+		user, err := findUserFromArray(u, m[i].UserID)
 		log.Printf("DEBUG:user:%v", user)
 		if err != nil {
 			return nil, err
@@ -133,10 +133,9 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	return response, nil
 }
 
-func findUserFromArray(users []User, uID string) (User, error) {
-	uIDInt, _ := strconv.ParseInt(uID, 10, 64)
+func findUserFromArray(users []User, uID int64) (User, error) {
 	for _, v := range users {
-		if v.ID == uIDInt {
+		if v.ID == uID {
 			return v, nil
 		}
 	}
