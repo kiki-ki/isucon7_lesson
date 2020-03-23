@@ -123,7 +123,7 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		var r map[string]interface{}
+		r := make(map[string]interface{})
 		r["id"] = m[i].ID
 		r["user"] = user
 		r["date"] = m[i].CreatedAt.Format("2006/01/02 15:04:05")
