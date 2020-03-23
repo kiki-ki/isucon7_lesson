@@ -103,7 +103,7 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 		uIds = append(uIds, strconv.Itoa(int(m[i].UserID)))
 	}
 	log.Printf("DEBUG:uIDs:%v", strings.Join(uIds, ","))
-
+	log.Println(db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ",")))
 	err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	if err != nil {
