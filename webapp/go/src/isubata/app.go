@@ -414,14 +414,18 @@ func getHistory(c echo.Context) error {
 		return err
 	}
 
-	mjson := make([]map[string]interface{}, 0)
-	for i := len(messages) - 1; i >= 0; i-- {
-		r, err := jsonifyMessage(messages[i])
-		if err != nil {
-			return err
-		}
-		mjson = append(mjson, r)
+	mjson, err := jsonifyMessages(messages)
+	if err != nil {
+		return err
 	}
+	// mjson := make([]map[string]interface{}, 0)
+	// for i := len(messages) - 1; i >= 0; i-- {
+	// 	r, err := jsonifyMessage(messages[i])
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	mjson = append(mjson, r)
+	// }
 
 	channels := []ChannelInfo{}
 	err = db.Select(&channels, "SELECT * FROM channel ORDER BY id")
