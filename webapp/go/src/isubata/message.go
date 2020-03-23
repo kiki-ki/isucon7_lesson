@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -87,6 +88,8 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 	s := "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(%v)"
 	sql := fmt.Sprintf(s, strings.Join(uIds, ","))
 	err := db.Select(&u, sql)
+	log.Println(sql)
+	log.Println(u[0])
 	//err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	if err != nil {
