@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -141,7 +140,6 @@ func getMessage(c echo.Context) error {
 	}
 
 	response, err := jsonifyMessages(messages)
-	log.Println(response)
 	if err != nil {
 		return err
 	}
