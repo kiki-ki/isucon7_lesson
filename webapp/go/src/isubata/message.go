@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -103,8 +104,11 @@ func jsonifyMessages(m []Message) ([]map[string]interface{}, error) {
 		uIds = append(uIds, strconv.Itoa(int(m[i].UserID)))
 	}
 	log.Printf("DEBUG:uIDs:%v", strings.Join(uIds, ","))
-	log.Println(db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ",")))
-	err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
+	s := "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(%v)"
+	sql := fmt.Sprintf(s, strings.Join(uIds, ","))
+	log.Println(sql)
+	err := db.Select(&u, sql)
+	//err := db.Select(&u, "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN(?)", strings.Join(uIds, ","))
 
 	if err != nil {
 		return nil, errors.New("user not found")
