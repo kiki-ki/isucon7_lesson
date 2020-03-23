@@ -1,0 +1,1 @@
+ALTER TABLE message ADD INDEX channel_id_index(channel_id)
